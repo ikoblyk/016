@@ -5,14 +5,14 @@ DBUSER=root
 DBPASSWD=123456
 
 echo "
-app.confHome=/var/atlassian/application-data/confluence7_2_2
+app.confHome=/var/atlassian/application-data/confluence7_3_1
 app.install.service$Boolean=true
 portChoice=default
 launch.application$Boolean=true
 sys.adminRights$Boolean=true
 sys.confirmedUpdateInstallationString=false
-sys.installationDir=/opt/atlassian/confluence7_2_2
-sys.languageId=en" > response.varfile
+sys.installationDir=/opt/atlassian/confluence7_3_1
+sys.languageId=en" > /vagrant/response.varfile
 
 sudo apt-get update
 sudo apt-get install -y mysql-server
@@ -22,14 +22,12 @@ export DEBIAN_FRONTEND=noninteractive
 if [ ! -f "/vagrant/atlassian-confluence-7.3.1-x64.bin" ]; then
   wget  https://product-downloads.atlassian.com/software/confluence/downloads/atlassian-confluence-7.3.1-x64.bin
   sudo chmod u+x atlassian-confluence-7.3.1-x64.bin
-  sudo ./atlassian-confluence-7.3.1-x64.bin -q -varfile response.varfile
+  sudo ./atlassian-confluence-7.3.1-x64.bin -q -varfile /vagrant/response.varfile
 else
   sudo chmod u+x /vagrant/atlassian-confluence-7.3.1-x64.bin
   sudo /vagrant/./atlassian-confluence-7.3.1-x64.bin -q -varfile response.varfile
   
 fi
-
-
 
 sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456'"
 
@@ -56,7 +54,7 @@ mysql -uroot -p123456 -e "GRANT ALL PRIVILEGES ON CONFLUENCE* TO 'root'@'localho
 
 
 sudo apt-get install -y libmysql-java
-mv /usr/share/java/mysql-connector-java-5.1.45.jar /opt/atlassian/confluence7_2_2/confluence/WEB-INF/lib
+mv /usr/share/java/mysql-connector-java-5.1.45.jar /opt/atlassian/confluence7_3_1/confluence/WEB-INF/lib
 
 sudo /etc/init.d/confluence stop
 sudo /etc/init.d/confluence start
